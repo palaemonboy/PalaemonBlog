@@ -2,6 +2,7 @@ package routes
 
 import (
 	"PalaemonBlog/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,5 +27,8 @@ func InitRouter() {
 		})
 
 	}
-	router.Run(utils.HttpPort)
+	err := router.Run(utils.HttpPort)
+	if err != nil {
+		fmt.Println("Run Error.")
+	}
 }
