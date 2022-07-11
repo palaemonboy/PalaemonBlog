@@ -1,7 +1,13 @@
 package main
 
-import "PalaemonBlog/routes"
+import (
+	"PalaemonBlog/model"
+	"PalaemonBlog/routes"
+)
 
 func main() {
+	// DB init
+	model.InintDB()
+
 	routes.InitRouter()
 }
