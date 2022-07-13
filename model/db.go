@@ -10,10 +10,10 @@ import (
 	"time"
 )
 
-var db *gorm.DB
+var Db *gorm.DB
 var err error
 
-func InintDB() {
+func InitDB() error {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		utils.DBUser,
 		utils.DBPassword,
@@ -37,7 +37,7 @@ func InintDB() {
 		fmt.Println("Connect DB failed,pls check!", err)
 	}
 	// Migrate data tables, it is recommended that comments are not implemented when there are no data table structure changes | 迁移数据表，在没有数据表结构变更时候，建议注释不执行
-	_ = db.AutoMigrate(&User{}, &Article{}, &Category{})
+	//_ = db.AutoMigrate(&User{}, &Article{}, &Category{})
 
 	sqlDB, _ := db.DB()
 
@@ -49,5 +49,10 @@ func InintDB() {
 
 	// SetConnMaxLifetiment 设置连接的最大可复用时间。
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
+
+	fmt.Println("Connect DB SUCCESS!")
+
+	Db = db
+	return err
 
 }
