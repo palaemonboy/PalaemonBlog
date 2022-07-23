@@ -50,10 +50,11 @@ func GetUserList(PageSize int, PageNum int) []User {
 
 // EditUser 编辑用户 | edit user
 func EditUser(ID int, data *User) (code int) {
+	var user User
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
-	err = Db.Model(&User{}).Where("id = ?", ID).Updates(maps).Error
+	err = Db.Model(&user).Where("id = ?", ID).Updates(maps).Error
 	if err != nil {
 		return errormsg.ERROR
 	}

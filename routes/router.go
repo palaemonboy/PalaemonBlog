@@ -27,8 +27,6 @@ func InitRouter() {
 	// Service 入口
 	V1API := API.Group("/v1")
 	{
-		//【测试】检查用户状态
-
 		// user module routers
 		V1API.POST("/user/add", v1.AddNewUser)
 		V1API.GET("/users", v1.QueryUserList)
@@ -36,7 +34,11 @@ func InitRouter() {
 		V1API.DELETE("/user/:id", v1.DeleteUser)
 
 		// category module routers
-
+		V1API.POST("/category/add", v1.AddNewCategory)
+		V1API.GET("/category/:id", v1.QuerySingleCategory)
+		V1API.GET("/categorys", v1.QueryCategoryList)
+		V1API.PUT("/category/:id", v1.EditCategory)
+		V1API.DELETE("/category/:id", v1.DeleteCategory)
 		// article module routers
 
 	}
