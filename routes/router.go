@@ -39,7 +39,14 @@ func InitRouter() {
 		V1API.GET("/categorys", v1.QueryCategoryList)
 		V1API.PUT("/category/:id", v1.EditCategory)
 		V1API.DELETE("/category/:id", v1.DeleteCategory)
+
 		// article module routers
+		V1API.POST("/article/add", v1.AddNewArticle)
+		V1API.GET("/article/:id", v1.QuerySingleArticle)
+		V1API.GET("/article/category/:id", v1.QueryArticlesByCategory)
+		V1API.GET("/articles", v1.QueryArticleList)
+		V1API.PUT("/article/:id", v1.EditArticle)
+		V1API.DELETE("/article/:id", v1.DeleteArticle)
 
 	}
 	err := router.Run(utils.HttpPort)

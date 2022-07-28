@@ -29,7 +29,7 @@ func CheckUserStatus(name string) (code int) {
 // CreateNewUser 添加新用户 | add new user
 func CreateNewUser(data *User) int {
 	data.Password = ScryptPw(data.Password)
-	err := Db.Create(&data)
+	err := Db.Create(&data).Error
 	if err != nil {
 		return errormsg.ERROR
 	}
