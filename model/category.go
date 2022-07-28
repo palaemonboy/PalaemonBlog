@@ -22,7 +22,7 @@ func CheckCategoryStatus(name string) (code int) {
 
 // CreateNewCategory 添加分类 | add new category
 func CreateNewCategory(data *Category) int {
-	err := Db.Create(&data)
+	err := Db.Create(&data).Error
 	if err != nil {
 		return errormsg.ERROR
 	}
