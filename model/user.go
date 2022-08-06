@@ -82,3 +82,21 @@ func ScryptPw(password string) string {
 	finalPw := base64.StdEncoding.EncodeToString(pwHash)
 	return finalPw
 }
+
+// CheckLogin 查询登录状态| Check login status
+func CheckLogin(username, password string) (User, int) {
+	var user User
+	Db.Where("username = ?", username).First(&user)
+	if user.ID == 0 {
+		return user, errormsg.ErrorUserNotExist
+	}
+	if user.Password != ScryptPw(password) {
+		return user, errormsg.ErrorPasswordWrong
+	}
+	// no admin permission
+	if user.Role != 0 {
+		return user, errormsg.ErrorUserNoPermission
+	}
+	return user, errormsg.SUCCESS
+
+}
