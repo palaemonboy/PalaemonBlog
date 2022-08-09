@@ -37,17 +37,17 @@ func QueryArticlesByCategory(c *gin.Context) {
 		fmt.Println("Get Query ArticleReq error:", err)
 		return
 	}
-	fmt.Println(req.PageSize, req.PageNum)
 	if req.PageSize == 0 {
 		req.PageSize = -1
 	}
 	if req.PageNum == 0 {
 		req.PageNum = -1
 	}
-	data, code := model.QueryArticlesByCategory(id, req.PageSize, req.PageNum)
+	data, code, total := model.QueryArticlesByCategory(id, req.PageSize, req.PageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errormsg.GetErrMsg(code),
 	})
 }
@@ -70,7 +70,6 @@ func QueryArticleList(c *gin.Context) {
 		fmt.Println("Get Query ArticleReq error:", err)
 		return
 	}
-	fmt.Println(req.PageSize, req.PageNum)
 	if req.PageSize == 0 {
 		req.PageSize = -1
 	}

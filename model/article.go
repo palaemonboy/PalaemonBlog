@@ -47,13 +47,15 @@ func QuerySingleArticle(ID int) (Article, int) {
 }
 
 // QueryArticlesByCategory 查询分类下的所有文章 | query all articles under category
-func QueryArticlesByCategory(ID, PageSize, PageNum int) ([]Article, int) {
+func QueryArticlesByCategory(ID, PageSize, PageNum int) ([]Article, int, int64) {
 	var article []Article
+	var total int64
 	err := Db.Preload("Category").Where("cid = ?", ID).Limit(PageSize).Offset((PageNum - 1) * PageSize).Find(&article).Error
+	Db.Model(&article).Where("cid = ?", ID).Count(&total)
 	if err != nil {
-		return nil, errormsg.ErrorCategoryNotExist
+		return nil, errormsg.ErrorCategoryNotExist, 0
 	}
-	return article, errormsg.SUCCESS
+	return article, errormsg.SUCCESS, total
 }
 
 // EditArticle 编辑文章 | edit article

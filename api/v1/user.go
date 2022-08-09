@@ -3,6 +3,7 @@ package v1
 import (
 	"PalaemonBlog/model"
 	"PalaemonBlog/utils/errormsg"
+	"PalaemonBlog/utils/validate"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -23,6 +24,14 @@ func AddNewUser(c *gin.Context) {
 		fmt.Println("Get JSON error:", err)
 		return
 	}
+	valMsg, code := validate.Validator(&data)
+	if code != errormsg.SUCCESS {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  code,
+			"message": valMsg,
+		})
+		return
+	}
 	code = model.CheckUserStatus(data.Username)
 	if code == errormsg.SUCCESS {
 		model.CreateNewUser(&data)
@@ -32,7 +41,6 @@ func AddNewUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
-		"data":    data,
 		"message": errormsg.GetErrMsg(code),
 	})
 }
@@ -46,18 +54,18 @@ func QueryUserList(c *gin.Context) {
 		fmt.Println("Get QueryUserListReq error:", err)
 		return
 	}
-	fmt.Println(req.PageSize, req.PageNum)
 	if req.PageSize == 0 {
 		req.PageSize = -1
 	}
 	if req.PageNum == 0 {
 		req.PageNum = -1
 	}
-	data := model.GetUserList(req.PageSize, req.PageNum)
+	data, total := model.GetUserList(req.PageSize, req.PageNum)
 	code = errormsg.SUCCESS
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,
+		"total":   total,
 		"message": errormsg.GetErrMsg(code),
 	})
 }

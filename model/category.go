@@ -41,10 +41,10 @@ func QueryCategoryList(PageSize, PageNum int) ([]Category, int64) {
 	var category []Category
 	var total int64
 	err = Db.Limit(PageSize).Offset((PageNum - 1) * PageSize).Find(&category).Error
+	Db.Model(&category).Count(&total)
 	if err != gorm.ErrRecordNotFound && err != nil {
 		return nil, 0
 	}
-	Db.Model(&category).Count(&total)
 	return category, total
 }
 
