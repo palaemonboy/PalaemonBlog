@@ -19,8 +19,9 @@ func InitRouter() {
 	}
 	router := gin.New()
 	router.Use(
+		middleware.Logger(),
 		gin.Recovery(),
-		
+		middleware.Cors(),
 	)
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -53,7 +54,7 @@ func InitRouter() {
 	}
 	public := API.Group("/v1")
 	{
-		public.POST("login", v1.Login)
+		public.POST("/login", v1.Login)
 
 		public.POST("/user/add", v1.AddNewUser)
 

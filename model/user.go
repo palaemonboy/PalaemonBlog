@@ -10,9 +10,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username" `
-	Password string `gorm:"type:varchar(20);not null" json:"password" `
-	Role     int    `gorm:"type:int" json:"role" `
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12" label:"用户名"`
+	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
+	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=2" label:"权限"`
 }
 
 // CheckUserStatus 查询用户状态 | query user status
@@ -20,7 +20,6 @@ func CheckUserStatus(name string) (code int) {
 	var user User
 	Db.Select("id").Where("username = ?", name).First(&user)
 	if user.ID > 0 {
-		//fmt.Println("user.ID = ", user.ID)
 		return errormsg.ErrorUserNameUsed //1001
 	}
 	return errormsg.SUCCESS
@@ -39,13 +38,14 @@ func CreateNewUser(data *User) int {
 // 查询单个用户 | query user
 
 // GetUserList 查询用户列表 | query user list
-func GetUserList(PageSize int, PageNum int) []User {
+func GetUserList(PageSize int, PageNum int) ([]User, int64) {
 	var users []User
-	err = Db.Limit(PageSize).Offset((PageNum - 1) * PageSize).Find(&users).Error
+	var total int64
+	err = Db.Limit(PageSize).Offset((PageNum - 1) * PageSize).Find(&users).Count(&total).Error
 	if err != gorm.ErrRecordNotFound && err != nil {
-		return nil
+		return nil, 0
 	}
-	return users
+	return users, total
 }
 
 // EditUser 编辑用户 | edit user
@@ -94,7 +94,7 @@ func CheckLogin(username, password string) (User, int) {
 		return user, errormsg.ErrorPasswordWrong
 	}
 	// no admin permission
-	if user.Role != 0 {
+	if user.Role != 1 {
 		return user, errormsg.ErrorUserNoPermission
 	}
 	return user, errormsg.SUCCESS

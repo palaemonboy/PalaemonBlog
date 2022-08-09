@@ -31,7 +31,7 @@ func Login(c *gin.Context) {
 			"status":  errormsg.ErrorTokenWrong,
 			"data":    data.Username,
 			"id":      data.ID,
-			"message": errormsg.GetErrMsg(errormsg.ErrorTokenWrong),
+			"message": errormsg.GetErrMsg(code),
 		})
 	}
 

@@ -53,7 +53,6 @@ func QueryCategoryList(c *gin.Context) {
 		fmt.Println("Get QueryUserListReq error:", err)
 		return
 	}
-	fmt.Println(req.PageSize, req.PageNum)
 	if req.PageSize == 0 {
 		req.PageSize = -1
 	}
